@@ -1,6 +1,6 @@
 {
   "name": "audio-shrink",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Shrink, normalise and denoise an MP3 to a target size.",
   "main": "src/main.js",
   "author": "Hand Coded Studio",
@@ -8,7 +8,7 @@
   "scripts": {
     "start": "electron .",
     "postinstall": "node scripts/fix-electron.js",
-    "test": "node --test \"test/**/*.test.js\"",
+    "test": "node --test",
     "dist": "electron-builder",
     "dist:mac": "electron-builder --mac",
     "dist:win": "electron-builder --win",

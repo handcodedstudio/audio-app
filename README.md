@@ -46,6 +46,7 @@ Everything runs locally and offline — the audio engine (ffmpeg) is bundled ins
 ```
 audio-app/
 ├── package.json          # scripts, deps, electron-builder config
+├── LICENSE               # MIT
 ├── build/
 │   ├── icon.png          # app icon (electron-builder generates .icns/.ico)
 │   └── entitlements.mac.plist  # hardened-runtime entitlements for signing
@@ -118,7 +119,7 @@ The build config lives under the `"build"` key in `package.json` (via electron-b
 
 ```bash
 npm run dist        # build for the current OS
-npm run dist:mac    # macOS .dmg
+npm run dist:mac    # macOS .dmg (+ a .zip used for auto-update)
 npm run dist:win    # Windows .exe (NSIS installer)
 ```
 
@@ -150,13 +151,15 @@ The app updates itself from **GitHub Releases** using [`electron-updater`](https
 
 ### One-time setup
 
-In `package.json` → `build.publish`, set your GitHub details:
+This is already configured in `package.json` → `build.publish` to point at the project repo:
 
 ```json
 "publish": [
-  { "provider": "github", "owner": "YOUR_GITHUB_USERNAME", "repo": "audio-app" }
+  { "provider": "github", "owner": "handcodedstudio", "repo": "audio-app" }
 ]
 ```
+
+> **Note:** the repo is currently **private**. `electron-updater` cannot download release assets from a private repo without an access token embedded in the shipped app. For public auto-updates, either make the repo public or point `publish` at a dedicated public releases repo.
 
 ### Cutting a release
 
