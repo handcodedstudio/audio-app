@@ -38,13 +38,16 @@ jobs:
           # Provided automatically by GitHub Actions — lets electron-builder
           # create the Release and upload the installers + update metadata.
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # --- macOS code signing + notarisation (required for mac auto-update) ---
-          # Developer ID Application certificate, exported as a .p12 and base64-encoded:
-          #   base64 -i cert.p12 | pbcopy   ->  paste into the MAC_CSC_LINK secret
-          #   (scoped to the macOS runner so the cert isn't applied to Windows signing)
-          CSC_LINK: ${{ matrix.os == 'macos-latest' && secrets.MAC_CSC_LINK || '' }}
-          CSC_KEY_PASSWORD: ${{ matrix.os == 'macos-latest' && secrets.MAC_CSC_KEY_PASSWORD || '' }}
-          # Notarisation credentials (used by electron-builder via notarytool):
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # --- Unsigned release ---
+          # No Apple keys yet, so force electron-builder to skip code signing.
+          # Passing an empty CSC_LINK instead makes it try to sign with a bogus
+          # cert path and fail ("not a file"), so we must omit it entirely.
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+          #
+          # --- To enable signed + notarised macOS builds later ---
+          # Add the five repo secrets, remove the line above, and uncomment:
+          #   CSC_LINK: ${{ secrets.MAC_CSC_LINK }}             # base64 of your .p12
+          #   CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          #   APPLE_ID: ${{ secrets.APPLE_ID }}
+          #   APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          #   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
