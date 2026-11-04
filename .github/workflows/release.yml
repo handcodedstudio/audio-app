@@ -6,6 +6,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write   # required for electron-builder to create the GitHub Release
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}
