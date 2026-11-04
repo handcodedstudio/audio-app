@@ -161,7 +161,7 @@ This is already configured in `package.json` → `build.publish` to point at the
 ]
 ```
 
-> **Note:** the repo is currently **private**. `electron-updater` cannot download release assets from a private repo without an access token embedded in the shipped app. For public auto-updates, either make the repo public or point `publish` at a dedicated public releases repo.
+> The repo is **public**, so `electron-updater` can fetch releases anonymously — no token embedded in the app. (A private repo would break this, since the client can't authenticate.)
 
 ### Cutting a release
 
