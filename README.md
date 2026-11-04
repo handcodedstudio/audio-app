@@ -119,9 +119,11 @@ The build config lives under the `"build"` key in `package.json` (via electron-b
 
 ```bash
 npm run dist        # build for the current OS
-npm run dist:mac    # macOS .dmg (+ a .zip used for auto-update)
+npm run dist:mac    # macOS universal .dmg (+ .zip for auto-update)
 npm run dist:win    # Windows .exe (NSIS installer)
 ```
+
+The macOS build is a **universal** binary (Apple Silicon + Intel). Since `ffmpeg-static` only ships one architecture, a `beforePack` hook (`scripts/before-pack.js`) stages **both** Mac ffmpeg binaries into `resources/ffmpeg/`, and `resolveFfmpeg()` in `src/audio.js` picks the one matching the running arch. `ffprobe-static` already bundles every arch. The single-arch helper binaries are declared in `mac.x64ArchFiles` so the universal merge keeps them as-is.
 
 Output appears in `dist/`.
 

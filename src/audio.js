@@ -2,6 +2,7 @@
 
 const { spawn } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 // Resolve the bundled binaries. When packaged inside an asar archive the
 // binaries are unpacked (see asarUnpack in package.json), so rewrite the path.
@@ -9,7 +10,20 @@ function unpacked(p) {
   return p.replace('app.asar', 'app.asar.unpacked');
 }
 
-const ffmpegPath = unpacked(require('ffmpeg-static'));
+// The macOS build is universal (arm64 + x64), but ffmpeg-static only bundles a
+// single arch. The beforePack hook stages both into Resources/ffmpeg, so prefer
+// the one matching the running process. Falls back to ffmpeg-static for dev and
+// single-arch (Windows/Linux) builds. ffprobe-static ships every arch, so its
+// own path resolution already picks correctly at runtime.
+function resolveFfmpeg() {
+  if (process.resourcesPath) {
+    const staged = path.join(process.resourcesPath, 'ffmpeg', `ffmpeg-${process.arch}`);
+    if (fs.existsSync(staged)) return staged;
+  }
+  return unpacked(require('ffmpeg-static'));
+}
+
+const ffmpegPath = resolveFfmpeg();
 const ffprobePath = unpacked(require('ffprobe-static').path);
 
 // Valid CBR bitrates for libmp3lame (kbps).

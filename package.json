@@ -1,6 +1,6 @@
 {
   "name": "audio-shrink",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shrink, normalise and denoise an MP3 to a target size.",
   "main": "src/main.js",
   "author": "Hand Coded Studio",
@@ -31,6 +31,7 @@
       "src/**/*",
       "package.json"
     ],
+    "beforePack": "scripts/before-pack.js",
     "asarUnpack": [
       "node_modules/ffmpeg-static/**",
       "node_modules/ffprobe-static/**"
@@ -44,8 +45,14 @@
     ],
     "mac": {
       "target": [
-        "dmg",
-        "zip"
+        {
+          "target": "dmg",
+          "arch": "universal"
+        },
+        {
+          "target": "zip",
+          "arch": "universal"
+        }
       ],
       "category": "public.app-category.utilities",
       "icon": "build/icon.png",
@@ -54,7 +61,14 @@
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "notarize": true,
-      "artifactName": "Audio-Shrink-${version}-${arch}-mac.${ext}"
+      "artifactName": "Audio-Shrink-${version}-${arch}-mac.${ext}",
+      "extraResources": [
+        {
+          "from": "resources/ffmpeg",
+          "to": "ffmpeg"
+        }
+      ],
+      "x64ArchFiles": "**/{ffmpeg-*,ffmpeg,ffprobe}"
     },
     "dmg": {
       "artifactName": "Audio-Shrink-${version}-${arch}.${ext}"
